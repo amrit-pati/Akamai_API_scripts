@@ -6,7 +6,7 @@ read -p "Purge method? | Type invalidate or delete: " method
 
 echo "Issuing purge..."
 
-if [ "$purgeby" = url ]; then
+if [ "$purgeby" == url ]; then
 
 	http -a purge: POST :"/ccu/v3/$method/$purgeby/$network" "Content-Type:application/json" < purge_urls.json
 else 
