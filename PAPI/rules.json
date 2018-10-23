@@ -1,0 +1,636 @@
+{
+  "accountId" : "act_F-AC-2356925",
+  "contractId" : "ctr_P-2BHFH0T",
+  "groupId" : "grp_116416",
+  "propertyId" : "prp_481159",
+  "propertyName" : "stagenew.perniaspopupshop.in",
+  "propertyVersion" : 14,
+  "etag" : "3b02810b2051b42261716ac6620a3506a116fac9",
+  "rules" : {
+    "name" : "default",
+    "children" : [ {
+      "name" : "US country code",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "setVariable",
+        "options" : {
+          "variableName" : "PMUSER_LOCATION",
+          "valueSource" : "EXPRESSION",
+          "transform" : "NONE",
+          "variableValue" : "US"
+        }
+      } ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "EU location",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "setVariable",
+        "options" : {
+          "variableName" : "PMUSER_LOCATION",
+          "valueSource" : "EXPRESSION",
+          "transform" : "NONE",
+          "variableValue" : "EU"
+        }
+      }, {
+        "name" : "modifyOutgoingRequestHeader",
+        "options" : {
+          "action" : "ADD",
+          "standardAddHeaderName" : "OTHER",
+          "headerValue" : "{{user.PMUSER_LOCATION}}",
+          "customHeaderName" : "Geo"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "userLocation",
+        "options" : {
+          "field" : "CONTINENT",
+          "matchOperator" : "IS_ONE_OF",
+          "checkIps" : "CONNECTING",
+          "continentValues" : [ "EU" ]
+        }
+      }, {
+        "name" : "requestHeader",
+        "options" : {
+          "headerName" : "Geo",
+          "matchOperator" : "IS_ONE_OF",
+          "values" : [ "EU" ],
+          "matchWildcardName" : false,
+          "matchWildcardValue" : false,
+          "matchCaseSensitiveValue" : true
+        }
+      } ],
+      "criteriaMustSatisfy" : "any"
+    }, {
+      "name" : "Location - exception US",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "setVariable",
+        "options" : {
+          "variableName" : "PMUSER_LOCATION",
+          "valueSource" : "EXTRACT",
+          "transform" : "NONE",
+          "extractLocation" : "EDGESCAPE",
+          "locationId" : "COUNTRY_CODE"
+        }
+      }, {
+        "name" : "modifyOutgoingRequestHeader",
+        "options" : {
+          "action" : "ADD",
+          "standardAddHeaderName" : "OTHER",
+          "headerValue" : "{{user.PMUSER_LOCATION}}",
+          "customHeaderName" : "Geo"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "userLocation",
+        "options" : {
+          "field" : "COUNTRY",
+          "matchOperator" : "IS_ONE_OF",
+          "countryValues" : [ "IN", "AU", "SG", "ZA", "CA", "HK", "CN", "GB" ],
+          "checkIps" : "CONNECTING"
+        }
+      }, {
+        "name" : "requestHeader",
+        "options" : {
+          "headerName" : "Geo",
+          "matchOperator" : "IS_ONE_OF",
+          "values" : [ "IN", "AU", "SG", "ZA", "CA", "HK", "CN", "GB" ],
+          "matchWildcardName" : false,
+          "matchWildcardValue" : false,
+          "matchCaseSensitiveValue" : true
+        }
+      } ],
+      "criteriaMustSatisfy" : "any"
+    }, {
+      "name" : "check currency cookie",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "setVariable",
+        "options" : {
+          "variableName" : "PMUSER_CURRENCY",
+          "valueSource" : "EXTRACT",
+          "transform" : "NONE",
+          "extractLocation" : "COOKIE",
+          "cookieName" : "currency"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "requestCookie",
+        "options" : {
+          "cookieName" : "currency",
+          "matchOperator" : "EXISTS",
+          "matchWildcardName" : false,
+          "matchCaseSensitiveName" : true
+        }
+      } ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Check for User Log In",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "setVariable",
+        "options" : {
+          "variableName" : "PMUSER_USERLOGGED",
+          "valueSource" : "EXPRESSION",
+          "transform" : "NONE",
+          "variableValue" : "true"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "requestCookie",
+        "options" : {
+          "cookieName" : "fe_ppus_log",
+          "matchOperator" : "IS",
+          "matchWildcardName" : false,
+          "matchCaseSensitiveName" : true,
+          "value" : "isxuvasd6log",
+          "matchWildcardValue" : false,
+          "matchCaseSensitiveValue" : true
+        }
+      } ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "cache id mod",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "cacheId",
+        "options" : {
+          "rule" : "INCLUDE_VARIABLE",
+          "variableName" : "PMUSER_USERLOGGED"
+        }
+      }, {
+        "name" : "cacheId",
+        "options" : {
+          "rule" : "INCLUDE_VARIABLE",
+          "variableName" : "PMUSER_LOCATION"
+        }
+      }, {
+        "name" : "cacheId",
+        "options" : {
+          "rule" : "INCLUDE_VARIABLE",
+          "variableName" : "PMUSER_CURRENCY"
+        }
+      }, {
+        "name" : "cacheId",
+        "options" : {
+          "rule" : "INCLUDE_ALL_QUERY_PARAMS"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "fileExtension",
+        "options" : {
+          "matchOperator" : "IS_ONE_OF",
+          "values" : [ "html", "htm", "EMPTY_STRING" ],
+          "matchCaseSensitive" : false
+        }
+      } ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Performance",
+      "children" : [ {
+        "name" : "Compressible Objects",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "gzipResponse",
+          "options" : {
+            "behavior" : "ALWAYS"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "contentType",
+          "options" : {
+            "matchCaseSensitive" : false,
+            "matchOperator" : "IS_ONE_OF",
+            "matchWildcard" : true,
+            "values" : [ "text/*", "application/javascript", "application/x-javascript", "application/x-javascript*", "application/json", "application/x-json", "application/*+json", "application/*+xml", "application/text", "application/vnd.microsoft.icon", "application/vnd-ms-fontobject", "application/x-font-ttf", "application/x-font-opentype", "application/x-font-truetype", "application/xmlfont/eot", "application/xml", "font/opentype", "font/otf", "font/eot", "image/svg+xml", "image/vnd.microsoft.icon" ]
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : "Compresses content to improve performance of clients with slow connections. Applies Last Mile Acceleration to requests when the returned object supports gzip compression."
+      } ],
+      "behaviors" : [ {
+        "name" : "enhancedAkamaiProtocol",
+        "options" : {
+          "display" : ""
+        }
+      }, {
+        "name" : "http2",
+        "options" : {
+          "enabled" : ""
+        }
+      }, {
+        "name" : "allowTransferEncoding",
+        "options" : {
+          "enabled" : true
+        }
+      }, {
+        "name" : "removeVary",
+        "options" : {
+          "enabled" : true
+        }
+      }, {
+        "name" : "sureRoute",
+        "options" : {
+          "enabled" : true,
+          "forceSslForward" : true,
+          "raceStatTtl" : "30m",
+          "testObjectUrl" : "/akamai/sureroute-test-object.html",
+          "toHostStatus" : "INCOMING_HH",
+          "type" : "PERFORMANCE",
+          "enableCustomKey" : false
+        }
+      }, {
+        "name" : "prefetch",
+        "options" : {
+          "enabled" : true
+        }
+      } ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : "Improves the performance of delivering objects to end users. Behaviors in this rule are applied to all requests as appropriate."
+    }, {
+      "name" : "Offload",
+      "children" : [ {
+        "name" : "Cache all html with exceptions",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "12h"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "path",
+          "options" : {
+            "matchOperator" : "DOES_NOT_MATCH_ONE_OF",
+            "values" : [ "*cart*", "*checkout*", "*onepage*", "*order*", "*account*", "*wishlist*", "*paypal*", "*ccavenue*", "*ppc*", "*admin*", "*po/new*", "*ajaxheader*", "*payU*", "/akamai/sureroute-test-object.html" ],
+            "matchCaseSensitive" : false
+          }
+        }, {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "html", "htm", "EMPTY_STRING" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      }, {
+        "name" : "CSS and JavaScript",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "1d"
+          }
+        }, {
+          "name" : "prefreshCache",
+          "options" : {
+            "enabled" : true,
+            "prefreshval" : 90
+          }
+        }, {
+          "name" : "prefetchable",
+          "options" : {
+            "enabled" : true
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchCaseSensitive" : false,
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "css", "js" ]
+          }
+        } ],
+        "criteriaMustSatisfy" : "any",
+        "comments" : "Overrides the default caching behavior for CSS and JavaScript objects that are cached on the edge server. Because these object types are dynamic, the TTL is brief."
+      }, {
+        "name" : "Static Objects",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "30d"
+          }
+        }, {
+          "name" : "prefreshCache",
+          "options" : {
+            "enabled" : true,
+            "prefreshval" : 90
+          }
+        }, {
+          "name" : "prefetchable",
+          "options" : {
+            "enabled" : true
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchCaseSensitive" : false,
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "aif", "aiff", "au", "avi", "bin", "bmp", "cab", "carb", "cct", "cdf", "class", "doc", "dcr", "dtd", "exe", "flv", "gcf", "gff", "gif", "grv", "hdml", "hqx", "ico", "ini", "jpeg", "jpg", "mov", "mp3", "nc", "pct", "pdf", "png", "ppc", "pws", "swa", "swf", "txt", "vbs", "w32", "wav", "wbmp", "wml", "wmlc", "wmls", "wmlsc", "xsd", "zip", "pict", "tif", "tiff", "mid", "midi", "ttf", "eot", "woff", "woff2", "otf", "svg", "svgz", "webp", "jxr", "jar", "jp2" ]
+          }
+        } ],
+        "criteriaMustSatisfy" : "any",
+        "comments" : "Overrides the default caching behavior for images, music, and similar objects that are cached on the edge server. Because these object types are static, the TTL is long."
+      }, {
+        "name" : "Uncacheable Responses",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "downstreamCache",
+          "options" : {
+            "behavior" : "TUNNEL_ORIGIN"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "cacheability",
+          "options" : {
+            "matchOperator" : "IS_NOT",
+            "value" : "CACHEABLE"
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : "Overrides the default downstream caching behavior for uncacheable object types. Instructs the edge server to pass Cache-Control and/or Expire headers from the origin to the client."
+      } ],
+      "behaviors" : [ {
+        "name" : "caching",
+        "options" : {
+          "behavior" : "NO_STORE"
+        }
+      }, {
+        "name" : "cacheError",
+        "options" : {
+          "enabled" : true,
+          "preserveStale" : true,
+          "ttl" : "10s"
+        }
+      }, {
+        "name" : "downstreamCache",
+        "options" : {
+          "allowBehavior" : "LESSER",
+          "behavior" : "ALLOW",
+          "sendHeaders" : "CACHE_CONTROL_AND_EXPIRES",
+          "sendPrivate" : false
+        }
+      }, {
+        "name" : "tieredDistribution",
+        "options" : {
+          "enabled" : true
+        }
+      } ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : "Controls caching, which offloads traffic away from the origin. Most objects types are not cached. However, the child rules override this behavior for certain subsets of requests."
+    }, {
+      "name" : "Mobile Redirect",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "redirect",
+        "options" : {
+          "mobileDefaultChoice" : "DEFAULT",
+          "destinationProtocol" : "SAME_AS_REQUEST",
+          "destinationHostname" : "SAME_AS_REQUEST",
+          "destinationPath" : "PREFIX_REQUEST",
+          "queryString" : "APPEND",
+          "responseCode" : 302,
+          "destinationPathPrefix" : "/mobile",
+          "destinationPathSuffixStatus" : "NO_SUFFIX"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "deviceCharacteristic",
+        "options" : {
+          "characteristic" : "IS_MOBILE",
+          "booleanValue" : true
+        }
+      }, {
+        "name" : "path",
+        "options" : {
+          "matchOperator" : "DOES_NOT_MATCH_ONE_OF",
+          "values" : [ "*mobile*" ],
+          "matchCaseSensitive" : false
+        }
+      }, {
+        "name" : "fileExtension",
+        "options" : {
+          "matchOperator" : "IS_NOT_ONE_OF",
+          "values" : [ "jpg", "jpeg", "png", "gif", "tiff", "tif", "jif", "jfif", "jp2", "jpx", "j2k", "j2c", "bmp" ],
+          "matchCaseSensitive" : false
+        }
+      }, {
+        "name" : "path",
+        "options" : {
+          "matchOperator" : "DOES_NOT_MATCH_ONE_OF",
+          "values" : [ "/ccavenuepay/ccavenuepay/redirect/", "/paypal/standard/redirect/", "/paypal/standard/redirect", "/ccavenuepay/ccavenuepay/redirect", "/gift-cards", "/gift-cards/", "/paypal/standard/successcustom", "/paypal/standard/successcustom/" ],
+          "matchCaseSensitive" : false
+        }
+      } ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Desktop Redirect",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "setVariable",
+        "options" : {
+          "variableName" : "PMUSER_REDIRECT_PATH",
+          "valueSource" : "EXPRESSION",
+          "transform" : "SUBSTITUTE",
+          "variableValue" : "{{builtin.AK_URL}}",
+          "regex" : "\\/mobile",
+          "replacement" : "",
+          "caseSensitive" : true,
+          "globalSubstitution" : false
+        }
+      }, {
+        "name" : "redirect",
+        "options" : {
+          "mobileDefaultChoice" : "DEFAULT",
+          "destinationProtocol" : "SAME_AS_REQUEST",
+          "destinationHostname" : "SAME_AS_REQUEST",
+          "destinationPath" : "OTHER",
+          "queryString" : "APPEND",
+          "responseCode" : 302,
+          "destinationPathOther" : "{{user.PMUSER_REDIRECT_PATH}}"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "deviceCharacteristic",
+        "options" : {
+          "characteristic" : "IS_MOBILE",
+          "booleanValue" : false
+        }
+      }, {
+        "name" : "path",
+        "options" : {
+          "matchOperator" : "MATCHES_ONE_OF",
+          "values" : [ "*mobile*" ],
+          "matchCaseSensitive" : false
+        }
+      } ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Pixel density for retina devices",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "imOverride",
+        "options" : {
+          "override" : "DPR",
+          "typesel" : "VALUE",
+          "dpr" : 2
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "userAgent",
+        "options" : {
+          "matchOperator" : "IS_ONE_OF",
+          "values" : [ "*Mac*", "*MAC*", "*iPad*", "*IPAD*", "*ipad*", "*iPhone*", "*iphone*", "*IPHONE*" ],
+          "matchWildcard" : true,
+          "matchCaseSensitive" : false
+        }
+      } ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Image Manager",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "caching",
+        "options" : {
+          "behavior" : "MAX_AGE",
+          "mustRevalidate" : false,
+          "ttl" : "30d"
+        }
+      }, {
+        "name" : "imageManager",
+        "options" : {
+          "advanced" : false,
+          "apiReferenceTitle" : "",
+          "applyBestFileType" : true,
+          "enabled" : true,
+          "policyTokenDefault" : "stagenew_perniaspopupshop_in",
+          "resize" : false,
+          "settingsTitle" : "",
+          "superCacheRegion" : "US",
+          "trafficTitle" : "",
+          "cpCodeOriginal" : {
+            "id" : 741154,
+            "description" : "stagenew.perniaspopupshop.in",
+            "products" : [ "Fresca" ],
+            "createdDate" : 1534772074000,
+            "name" : "stagenew.perniaspopupshop.in"
+          },
+          "cpCodeTransformed" : {
+            "id" : 741160,
+            "description" : "stagenew.perniaspopupshop.in",
+            "products" : [ "Fresca" ],
+            "createdDate" : 1534772086000,
+            "name" : "stagenew.perniaspopupshop.in"
+          }
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "fileExtension",
+        "options" : {
+          "matchCaseSensitive" : false,
+          "matchOperator" : "IS_ONE_OF",
+          "values" : [ "jpg", "gif", "jpeg", "png", "imviewer" ]
+        }
+      } ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : "Enable Scale for Mobile to serve the best available size for the requesting device. (Careful testing is highly recommended.) Enable Use Best File Type to serve the image format that works best for the requesting client. To configure breakpoint widths, derivative image quality, and artistic transformations, save and activate this configuration; then, create policies for this policy set via either Image Manager Policy Manager or the OPEN Image Manager API."
+    } ],
+    "behaviors" : [ {
+      "name" : "origin",
+      "options" : {
+        "cacheKeyHostname" : "REQUEST_HOST_HEADER",
+        "compress" : true,
+        "enableTrueClientIp" : true,
+        "forwardHostHeader" : "REQUEST_HOST_HEADER",
+        "hostname" : "master.perniaspopupshop.com",
+        "httpPort" : 80,
+        "originType" : "CUSTOMER",
+        "originCertificate" : "",
+        "verificationMode" : "CUSTOM",
+        "ports" : "",
+        "httpsPort" : 443,
+        "originSni" : true,
+        "customValidCnValues" : [ "{{Origin Hostname}}", "{{Forward Host Header}}" ],
+        "originCertsToHonor" : "STANDARD_CERTIFICATE_AUTHORITIES",
+        "standardCertificateAuthorities" : [ "akamai-permissive" ],
+        "trueClientIpHeader" : "True-Client-IP",
+        "trueClientIpClientSetting" : false
+      }
+    }, {
+      "name" : "cpCode",
+      "options" : {
+        "value" : {
+          "id" : 741171,
+          "description" : "stagenew.perniaspopupshop.in",
+          "products" : [ "Fresca" ],
+          "createdDate" : 1534773446000,
+          "name" : "stagenew.perniaspopupshop.in"
+        }
+      }
+    }, {
+      "name" : "allowPost",
+      "options" : {
+        "allowWithoutContentLength" : false,
+        "enabled" : true
+      }
+    }, {
+      "name" : "realUserMonitoring",
+      "options" : {
+        "enabled" : true
+      }
+    }, {
+      "name" : "edgeScape",
+      "options" : {
+        "enabled" : true
+      }
+    }, {
+      "name" : "deviceCharacteristicHeader",
+      "options" : {
+        "elements" : [ "RESOLUTION_WIDTH", "RESOLUTION_HEIGHT", "PHYSICAL_SCREEN_HEIGHT", "PHYSICAL_SCREEN_WIDTH" ]
+      }
+    } ],
+    "options" : {
+      "is_secure" : true
+    },
+    "variables" : [ {
+      "name" : "PMUSER_LOCATION",
+      "value" : "false",
+      "description" : "",
+      "hidden" : false,
+      "sensitive" : false
+    }, {
+      "name" : "PMUSER_USERLOGGED",
+      "value" : "false",
+      "description" : "",
+      "hidden" : false,
+      "sensitive" : false
+    }, {
+      "name" : "PMUSER_CURRENCY",
+      "value" : "empty",
+      "description" : "",
+      "hidden" : false,
+      "sensitive" : false
+    }, {
+      "name" : "PMUSER_REDIRECT_PATH",
+      "value" : "empty",
+      "description" : "",
+      "hidden" : false,
+      "sensitive" : false
+    } ],
+    "comments" : "The behaviors in the Default Rule apply to all requests for the property hostname(s) unless another rule overrides the Default Rule settings."
+  },
+  "ruleFormat" : "latest"
+}

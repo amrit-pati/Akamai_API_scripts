@@ -1,0 +1,17 @@
+{
+  "propertyVersion": 14,
+  "network": "STAGING",
+  "note": "\"Corrected the criteria for path match\"",
+  "notifyEmails": [
+    "apati@akamai.com"
+  ],
+  "acknowledgeAllWarnings": true,
+  "useFastFallback": false,
+  "activationType": "ACTIVATE",
+  "complianceRecord": {
+    "noncomplianceReason": "NONE",
+    "unitTested": true,
+    "peerReviewedBy": "",
+    "customerEmail": ""
+  }
+}

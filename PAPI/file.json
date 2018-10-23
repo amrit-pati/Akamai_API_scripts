@@ -1,0 +1,29 @@
+{
+  "versions" : {
+    "items" : [ {
+      "accountId" : "act_B-C-1IE2OH8",
+      "contractId" : "ctr_C-1IE2OHM",
+      "assetId" : "aid_10605206",
+      "groupId" : "grp_67223",
+      "propertyId" : "prp_493882",
+      "propertyName" : "amrit_ion_clone",
+      "propertyVersion" : 1,
+      "updatedByUser" : "apati",
+      "updatedDate" : "2018-10-22T14:37:24Z",
+      "productionStatus" : "INACTIVE",
+      "stagingStatus" : "INACTIVE"
+    }, {
+      "accountId" : "act_B-C-1IE2OH8",
+      "contractId" : "ctr_C-1IE2OHM",
+      "assetId" : "aid_10605206",
+      "groupId" : "grp_67223",
+      "propertyId" : "prp_493882",
+      "propertyName" : "amrit_ion_clone",
+      "propertyVersion" : 1,
+      "updatedByUser" : "apati",
+      "updatedDate" : "2018-10-22T14:39:22Z",
+      "productionStatus" : "INACTIVE",
+      "stagingStatus" : "INACTIVE"
+    } ]
+  }
+}
