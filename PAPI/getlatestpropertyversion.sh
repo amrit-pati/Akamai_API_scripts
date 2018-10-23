@@ -1,6 +1,7 @@
 
 read -p "Enter account switch key: " switchKey
 read -p "Enter property name: " property
+read -p "Enter the network(STAGING, PRODUCTION or LATEST for the highest version of config: " version
 
 echo "Fetching property..."
 
@@ -15,10 +16,9 @@ echo "contractId=$contractId"
 echo "groupId=$groupId"
 echo "propertyId=$propertyId"
 
-if [ $# -eq 3 ]
+if [ "$version" == STAGING -o "$version" == PRODUCTION ] 
 then 
 
-	version=$3
 	http :"/papi/v1/properties/$propertyId/versions/latest?activatedOn=$version&contractId=$contractId&groupId=$groupId&accountSwitchKey=$switchKey"
 else
 	http :"/papi/v1/properties/$propertyId/versions/latest?contractId=$contractId&groupId=$groupId&accountSwitchKey=$switchKey"
