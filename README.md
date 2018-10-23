@@ -9,7 +9,7 @@ b. You need to have HTTPie installed. -> https://brewinstall.org/Install-httpie-
 
 c. You need to have your edgegrid file set up as below 
 
-   Have a section [default] where you need to have your credentials from the account Switch Key
+   Have a section [default] where you need to have your credentials for account switching. 
    
    Have a section for purge as [purge], where you will have your purge credentials
    
